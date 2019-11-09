@@ -77,8 +77,16 @@ begin
   begin
     params := lpb['server'].AsString+'?act=a_check&key='+lpb['key'].AsString+'&ts='+ts+'&wait=20';
     jsonobj := TJSONObject(GetJSON(requests.SimpleGet(params)));
-    writeln(jsonobj.FormatJSON);
-    ts := jsonobj['ts'].AsString;
+    //writeln(jsonobj.FormatJSON);
+    try
+      ts := jsonobj['ts'].AsString;
+    except
+      params := 'access_token='+config.token+'&v=5.100&group_id='+inttostr(config.group_id);
+      lpb := TJSONObject(GetJSON(requests.SimpleFormPost('https://api.vk.com/method/groups.getLongPollServer',params))).Objects['response'];
+      ts := lpb['ts'].AsString;
+      writeln('Лонгполл обновлён');
+      Continue
+    end;
 
     for i:=0 to jsonobj.Arrays['updates'].Count-1 do
     begin
