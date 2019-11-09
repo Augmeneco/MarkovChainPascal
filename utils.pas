@@ -147,11 +147,20 @@ begin
 end;
 
 function iscommand(cmd,text: string): Boolean;
+var
+  cmdlist: TStringArray;
+  i: Integer;
 begin
-  if (pos('/'+cmd,text) <> 0) or (pos('!'+cmd,text) <> 0) then
+  cmdlist := cmd.Split([',']);
+  for i:=0 to Length(cmdlist)-1 do
   begin
-    iscommand := true;
-    exit;
+    if (pos('/'+cmdlist[i],text) <> 0) or
+    (pos('!'+cmdlist[i],text) <> 0) or
+    (pos('[club188597547|@nedoai_pascal] '+cmdlist[i],text) <> 0) then
+    begin
+      iscommand := true;
+      exit;
+    end;
   end;
   iscommand := false;
 end;

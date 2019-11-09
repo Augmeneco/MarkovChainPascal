@@ -77,6 +77,7 @@ begin
   begin
     params := lpb['server'].AsString+'?act=a_check&key='+lpb['key'].AsString+'&ts='+ts+'&wait=20';
     jsonobj := TJSONObject(GetJSON(requests.SimpleGet(params)));
+    writeln(jsonobj.FormatJSON);
     ts := jsonobj['ts'].AsString;
 
     for i:=0 to jsonobj.Arrays['updates'].Count-1 do
@@ -96,7 +97,7 @@ begin
           continue;
         end;
 
-        if iscommand('стат',msg.text) then
+        if iscommand('стат,stat',msg.text) then
         begin
           stat := readfile('/proc/self/status');
           RegexObj := TRegExpr.Create('VmRSS:\s+(\d+) kB');
@@ -105,7 +106,7 @@ begin
           RegexObj.Free;
         end;
 
-        if iscommand('начать',msg.text) then
+        if iscommand('начать,старт,start',msg.text) then
         begin
           count := dbExecOut(format('SELECT * FROM main WHERE id=%d',[msg.toho])).Count;
           if count = 0 then
@@ -115,14 +116,14 @@ begin
           apisay('Генерация сообщений включена. Её всегда можно отключить командой /стоп. Не забудь дать боту доступ к сообщениям!',msg.toho);
         end;
 
-        if iscommand('помощь',msg.text) then
+        if iscommand('помощь,help,команды',msg.text) then
         begin
           output := ' [ ПОМОЩЬ ] '+#13#10+'• /помощь - команды бота'+#13#10+'• /начать - начать генерацию сообщений в беседе'+#13#10+
           '• /стоп - остановить генерацию сообщений'+#13#10+'• /ген - принудительная генерация';
           apisay(output,msg.toho);
         end;
 
-        if iscommand('стоп',msg.text) then
+        if iscommand('стоп,stop',msg.text) then
         begin
           count := dbExecOut(format('SELECT * FROM main WHERE id=%d',[msg.toho])).Count;
           if count = 0 then
@@ -135,7 +136,11 @@ begin
           apisay('Генерация сообщений отключена. Её всегда можно снова включить командой /старт.',msg.toho);
         end;
 
-        if iscommand('ген',msg.text) then
+        if iscommand('инфа,info',msg.text) then
+           apisay('[ Статистика беседы ]'+#13#10+
+        'До следующего моего сообщения: '+counter[IntToStr(msg.toho)].AsString,msg.toho);
+
+        if iscommand('ген,g,gen,г',msg.text) then
         begin
            count := dbExecOut(format('SELECT * FROM main WHERE id=%d',[msg.toho])).Count;
            if count > 0 then
