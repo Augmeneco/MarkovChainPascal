@@ -20,3 +20,4 @@ lazbuild kbot.lpi
 ```json
 {"token":"токен","group_id":ид_группы}
 ```
+Версия LongPoll API: 5.101
