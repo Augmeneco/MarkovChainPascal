@@ -104,6 +104,8 @@ begin
           apisay('Этот бот работает лишь в беседах',msg.toho);
           continue;
         end;
+        if userid < 0 then
+           continue;
 
         if iscommand('стат,stat',msg.text) then
         begin
