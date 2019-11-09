@@ -145,9 +145,11 @@ begin
         end;
 
         if iscommand('инфа,info',msg.text) then
+        begin
            output:='[ Статистика беседы ]'+#13#10+
         'До следующего моего сообщения: '+IntToStr(10-counter[IntToStr(msg.toho)].AsInteger);
            apisay(output,msg.toho);
+        end;
 
         if iscommand('ген,g,gen,г',msg.text) then
         begin
