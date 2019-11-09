@@ -149,8 +149,10 @@ end;
 function iscommand(cmd,text: string): Boolean;
 begin
   if (pos('/'+cmd,text) <> 0) or (pos('!'+cmd,text) <> 0) then
+  begin
     iscommand := true;
     exit;
+  end;
   iscommand := false;
 end;
 
