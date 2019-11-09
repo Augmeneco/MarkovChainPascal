@@ -85,7 +85,7 @@ begin
       lpb := TJSONObject(GetJSON(requests.SimpleFormPost('https://api.vk.com/method/groups.getLongPollServer',params))).Objects['response'];
       ts := lpb['ts'].AsString;
       writeln('Лонгполл обновлён');
-      Continue
+      Continue;
     end;
 
     for i:=0 to jsonobj.Arrays['updates'].Count-1 do
