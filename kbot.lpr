@@ -16,7 +16,6 @@ type
 var
   i, k, count: integer;
   RegexObj: TRegExpr;
-  response: TStringStream;
   requests: TFPHTTPClient;
   params, ts, output, stat: string;
   config: TConfig;
@@ -24,29 +23,7 @@ var
   jsonarr: TJSONArray;
   msg: TMsg;
   dict, counter: TJSONObject;
-function readfile(fnam: string): string;
-var
-   F: TextFile;
-   line: string;
-begin
-   AssignFile(F, fnam);
-   Reset(F);
-   while not Eof(F) do begin
-     Readln(F, line);
-     readfile += line;
-   end;
-   closeFile(F);
-end;
-function apisay(text: string;toho: integer): string;
-var
-  _params: string;
-  _requests: TFPHTTPClient;
-begin
-  _requests := TFPHTTPClient.Create(Nil);
-  _params := Format('access_token=%s&v=5.80&peer_id=%d&message=%s',[config.token,toho,text]);
-  apisay := _requests.SimpleFormPost('https://api.vk.com/method/messages.send',_params);
-  FreeAndNil(_requests);
-end;
+
 begin
   Randomize;
   writeln('Начинаю инициализацию бота');
@@ -60,7 +37,6 @@ begin
     writeLn('ERROR: config "config.json" not exist!');
     halt(1);
   end;
-  response := TStringStream.Create('');
   requests := TFPHTTPClient.Create(Nil);
 
   jsonobj := TJSONObject(GetJSON(readfile('config.json')));
@@ -75,6 +51,7 @@ begin
 
   while(true) do
   begin
+    try
     params := lpb['server'].AsString+'?act=a_check&key='+lpb['key'].AsString+'&ts='+ts+'&wait=20';
     jsonobj := TJSONObject(GetJSON(requests.SimpleGet(params)));
     //writeln(jsonobj.FormatJSON);
@@ -162,7 +139,6 @@ begin
               apisay(mc_gen(dict),msg.toho);
            end;
         end;
-
         if Pos('/',msg.text) = 0 then
         if Length(msg.text.split([' '])) >= 3 then
         begin
@@ -203,8 +179,12 @@ begin
 
       except
         on E: Exception do
-          writeln( 'Error: '+ E.ClassName + #13#10 + E.Message );
+          writeln( 'LP Error: '+ E.ClassName + #13#10 + E.Message );
       end;
+    end;
+    except
+      on E: Exception do
+        writeln( 'Main Error: '+ E.ClassName + #13#10 + E.Message );
     end;
   end;
 end.

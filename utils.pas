@@ -14,16 +14,28 @@ function cuterandom(min,max: integer): Integer;
 function mc_add(dict: TJSONObject;text: string): TJSONObject;
 function mc_gen(dict: TJSONObject): string;
 function iscommand(cmd,text: string): Boolean;
+function apisay(text: string;toho: integer): string;
 
 
 implementation
 uses
-  jsonparser, sqlite3conn, db, SQLdb, strutils;
+  jsonparser, sqlite3conn, db, SQLdb, strutils, fphttpclient;
 var
   conn: TSQLite3Connection;
   trans: TSQLTransaction;
   query: TSQLQuery;
+  token: string;
 
+function apisay(text: string;toho: integer): string;
+var
+  params: string;
+  requests: TFPHTTPClient;
+begin
+  requests := TFPHTTPClient.Create(Nil);
+  params := Format('access_token=%s&v=5.80&peer_id=%d&message=%s',[token,toho,text]);
+  apisay := requests.SimpleFormPost('https://api.vk.com/method/messages.send',params);
+  //FreeAndNil(requests);
+end;
 function readfile(fnam: string): string;
 var
    F: TextFile;
@@ -163,9 +175,11 @@ begin
     end;
   end;
   iscommand := false;
+  //FreeAndNil(cmdlist);
 end;
 
 begin
+  token := TJSONObject(GetJSON(readfile('config.json')))['token'].AsString;
   conn := TSQLite3Connection.create(nil);
   conn.databaseName := './db';
   trans := TSQLTransaction.create(nil);
