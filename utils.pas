@@ -182,7 +182,7 @@ begin
 end;
 
 begin
-  token := TJSONObject(GetJSON(readfile('config.json')))['token'].AsString;
+  token := TJSONObject(GetJSON(readfile('bot.cfg')))['group_token'].AsString;
   conn := TSQLite3Connection.create(nil);
   conn.databaseName := './db';
   trans := TSQLTransaction.create(nil);
