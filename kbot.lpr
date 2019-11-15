@@ -28,15 +28,15 @@ begin
   Randomize;
   writeln('Начинаю инициализацию бота');
 
-  if not fileExists('./config.json') then
+  if not fileExists('./bot.cfg') then
   begin
-    writeLn('ERROR: config "config.json" not exist!');
+    writeLn('ERROR: Config "bot.cfg" not exist!');
     halt(1);
   end;
   requests := TFPHTTPClient.Create(Nil);
 
-  jsonobj := TJSONObject(GetJSON(readfile('config.json')));
-  config.token := jsonobj['token'].AsString;
+  jsonobj := TJSONObject(GetJSON(readfile('bot.cfg')));
+  config.token := jsonobj['group_token'].AsString;
   config.group_id := jsonobj['group_id'].AsInteger;
 
   params := 'access_token='+config.token+'&v=5.100&group_id='+inttostr(config.group_id);
