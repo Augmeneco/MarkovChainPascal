@@ -27,11 +27,7 @@ var
 begin
   Randomize;
   writeln('Начинаю инициализацию бота');
-  if not fileExists('./db') then
-  begin
-    writeLn('ERROR: Database "users.db" not exist!');
-    halt(1);
-  end;
+
   if not fileExists('./config.json') then
   begin
     writeLn('ERROR: config "config.json" not exist!');
@@ -54,7 +50,7 @@ begin
     try
     params := lpb['server'].AsString+'?act=a_check&key='+lpb['key'].AsString+'&ts='+ts+'&wait=20';
     jsonobj := TJSONObject(GetJSON(requests.SimpleGet(params)));
-    //writeln(jsonobj.FormatJSON);
+
     try
       ts := jsonobj['ts'].AsString;
     except
@@ -77,10 +73,9 @@ begin
            Continue;
         writeln('Получено сообщение: '+msg.text);
 
-        if msg.toho < 2000000000 then begin
-          apisay('Этот бот работает лишь в беседах',msg.toho);
+        if msg.toho < 2000000000 then
           continue;
-        end;
+
         if msg.userid < 0 then
            continue;
 
@@ -89,7 +84,7 @@ begin
           stat := readfile('/proc/self/status');
           RegexObj := TRegExpr.Create('VmRSS:\s+(\d+) kB');
           RegexObj.Exec(stat);
-          apisay(format('ПаскальБот потреблядствует: %s кБ',[RegexObj.Match[1]]),msg.toho);
+          apisay(format('Бот на цепях Маркова потребляет: %s кБ',[RegexObj.Match[1]]),msg.toho);
           RegexObj.Free;
         end;
 
@@ -101,13 +96,6 @@ begin
           else
              dbExecIn(format('UPDATE main SET data = ''%s'' WHERE id = %d',['{"start":"true"}',msg.toho]));
           apisay('Генерация сообщений включена. Её всегда можно отключить командой /стоп. Не забудь дать боту доступ к сообщениям!',msg.toho);
-        end;
-
-        if iscommand('помощь,help,команды',msg.text) then
-        begin
-          output := ' [ ПОМОЩЬ ] '+#13#10+'• /помощь - команды бота'+#13#10+'• /начать - начать генерацию сообщений в беседе'+#13#10+
-          '• /стоп - остановить генерацию сообщений'+#13#10+'• /ген - принудительная генерация';
-          apisay(output,msg.toho);
         end;
 
         if iscommand('стоп,stop',msg.text) then
@@ -123,7 +111,7 @@ begin
           apisay('Генерация сообщений отключена. Её всегда можно снова включить командой /старт.',msg.toho);
         end;
 
-        if iscommand('инфа,info',msg.text) then
+        if iscommand('инфо,info',msg.text) then
         begin
            output:='[ Статистика беседы ]'+#13#10+
         'До следующего моего сообщения: '+IntToStr(10-counter[IntToStr(msg.toho)].AsInteger);

@@ -166,9 +166,12 @@ begin
   cmdlist := cmd.Split([',']);
   for i:=0 to Length(cmdlist)-1 do
   begin
-    if (pos('/'+cmdlist[i],text) <> 0) or
+    if (pos('/ '+cmdlist[i],text) <> 0) or
+    (pos('! '+cmdlist[i],text) <> 0) or
     (pos('!'+cmdlist[i],text) <> 0) or
-    (pos('[club188597547|@nedoai_pascal] '+cmdlist[i],text) <> 0) then
+    (pos('/'+cmdlist[i],text) <> 0) or
+    (pos('бот '+cmdlist[i],text) <> 0) or
+    (pos('кб '+cmdlist[i],text) <> 0) then
     begin
       iscommand := true;
       exit;
