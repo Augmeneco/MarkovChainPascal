@@ -79,14 +79,14 @@ begin
         if msg.userid < 0 then
            continue;
 
-        //if iscommand('стат,stat',msg.text) then
-        //begin
-        //  stat := readfile('/proc/self/status');
-        //  RegexObj := TRegExpr.Create('VmRSS:\s+(\d+) kB');
-        //  RegexObj.Exec(stat);
-        //  apisay(format('Бот на цепях Маркова потребляет: %s кБ',[RegexObj.Match[1]]),msg.toho);
-        //  RegexObj.Free;
-        //end;
+        if iscommand('маркстат,markstat',msg.text) then
+        begin
+          stat := readfile('/proc/self/status');
+          RegexObj := TRegExpr.Create('VmRSS:\s+(\d+) kB');
+          RegexObj.Exec(stat);
+          apisay(format('Бот на цепях Маркова потребляет: %s кБ',[RegexObj.Match[1]]),msg.toho);
+          RegexObj.Free;
+        end;
 
         if iscommand('начать,старт,start',msg.text) then
         begin
@@ -163,6 +163,12 @@ begin
           writeln(counter[IntToStr(msg.toho)].AsInteger);
 
         end;
+        stat := readfile('/proc/self/status');
+        RegexObj := TRegExpr.Create('VmRSS:\s+(\d+) kB');
+        RegexObj.Exec(stat);
+        if StrToInt(RegexObj.Match[1]) >= 50000 then
+           halt(1);
+        RegexObj.Free;
 
 
       except
