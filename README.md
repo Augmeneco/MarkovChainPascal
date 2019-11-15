@@ -15,7 +15,7 @@ https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Laz
 lazbuild kbot.lpi
 ```
 
-Создай файл "config.json" с содержимым
+Создай файл "bot.cfg" с содержимым
 
 ```json
 {"token":"токен","group_id":ид_группы}
